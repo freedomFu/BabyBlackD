@@ -104,7 +104,9 @@ EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hel
 
 ![image](https://user-images.githubusercontent.com/40269368/148065595-748a8c6d-fefd-4c0e-976b-e6f241476c6b.png)
 
+![image](https://user-images.githubusercontent.com/40269368/148076013-6b3a5c58-487c-4cde-b6aa-afc81c4e992e.png)
 
 
 
+#####   4 Password Enabled Key Exchange Protocol
 

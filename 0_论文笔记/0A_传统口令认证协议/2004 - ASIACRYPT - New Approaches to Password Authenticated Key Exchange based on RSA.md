@@ -106,7 +106,16 @@ EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hel
 
 ![image](https://user-images.githubusercontent.com/40269368/148076013-6b3a5c58-487c-4cde-b6aa-afc81c4e992e.png)
 
+##### 4 Password Enabled Key Exchange Protocol
 
+- 介绍基本的PEKEP
+	- 等式有解和无解意味着什么？
+- PEKEP是如何防御`e-residue attack`的？
+- 
 
-#####   4 Password Enabled Key Exchange Protocol
+![image](https://user-images.githubusercontent.com/40269368/148143358-c0e068e9-a51e-4c72-99f2-93637bab3547.png)
+
+![image-20220105102858112](/Users/mac/Library/Application Support/typora-user-images/image-20220105102858112.png)
+
+###### 定理1
 

@@ -12,7 +12,7 @@
 
 #### 研究背景及意义
 
-
+当前提出的基于RSA的PAKE协议都不够安全，其中SNAPI虽然安全，但是它需要$e>n$，这让SNAPI实用性变差。作者提出PEKEP，$e$为大素数和小素数都可，可抵抗`e-residue`攻击（针对RSA的离线字典攻击），基于RSA猜想和随机预言模型（ROM）对PEKEP进行了形式化安全分析，且提出了一种计算性能更高的协议。
 
 #### 研究内容
 
@@ -30,7 +30,7 @@
 
 #### Abstract
 
-> - In fact, many of the proposed protocols for password-authenticated key exchange based on RSA have been shown to be insecure; the only one that remains secure is the SNAPI protocol. **the SNAPI protoocl has to use a prime public exponent *e* larger than the RSA modulus n.** 这个的意义是什么？
+> - In fact, many of the proposed protocols for password-authenticated key exchange based on RSA have been shown to be insecure; the only one that remains secure is the SNAPI protocol. **the SNAPI protoocl has to use a prime public exponent *e* larger than the RSA modulus n.**  实践应用性较差
 
 #### Introduction
 
@@ -55,13 +55,13 @@
 
 ##### Abstract
 
-作者调研了基于RSA的PAKE，目前大部分PAKE协议都是基于Diffie-Hellman协议，而使用RSA或其他公钥算法设计PAKE协议比较困难，而且当前基于RSA的PAKE协议大部分都不够安全，只有SNAPI还是安全的，但是它需要$e$比$n$大很多，这不太实际。本文提出了一种新的PAKE协议，即PEKEP，对$e$的大小没有闲置，而且从数论方面，它可以抵抗离线字典攻击中的`e-residue`攻击（e次剩余攻击）。作者还基于RSA猜想和ROM对PEKEP进行了安全分析，另外还基于此提升了安全效率。
+作者调研了基于RSA的PAKE，目前大部分PAKE协议都是基于Diffie-Hellman协议，而使用RSA或其他公钥算法设计PAKE协议比较困难，而且当前基于RSA的PAKE协议大部分都不够安全，只有SNAPI还是安全的，但是它需要$e$比$n$大很多，不适合实际应用。本文提出了一种新的PAKE协议，即PEKEP，对$e$的大小没有限制，而且从数论方面，它可以抵抗离线字典攻击中的`e-residue`攻击（e次剩余攻击）。作者还基于RSA猜想和ROM对PEKEP进行了安全分析，另外还基于此提升了安全效率。
 
 ##### 1 Introduciton
 
-一般密钥交换协议都需要实体之间共享一个从较大密钥空间获得的密钥数据，这样攻击者无论离线还是在线都很难枚举。然而在真实世界中，这个密钥却被一个容易记住的口令代替了，这样攻击者就可以采用猜测或字典攻击来获取口令。使用口令来实现安全鉴别似乎是自相矛盾的，92年的EKE证明这是可行的，使用公钥和对称密码体制结合的方法，使敌手无法获取成功验证猜测的方法。
+一般密钥交换协议都需要实体之间共享一个从较大密钥空间获得的密钥数据，这样攻击者无论离线还是在线都很难枚举。然而在真实世界中，这个密钥却被一个容易记住的口令代替了，这样攻击者就可以采用猜测或字典攻击来获取口令。使用口令来实现安全鉴别似乎是自相矛盾的，但92年的EKE证明这是可行的，使用公钥和对称密码体制结合使敌手无法获取成功验证猜测的方法。
 
-EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hellman key exchange`工作最好，而基于RSA协议却很多都被证明不安全，只有SNAPI仍然安全，但是它需要使用一个大素数$e$，比模数$n$还要大， 这让SNAPI协议变得实践性较差，公钥加密算法和大的指数的素数测试会引入大量运算。
+EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hellman key exchange`工作最好，而基于RSA协议却很多都被证明不安全，只有SNAPI仍然安全，但是它需要使用一个大素数$e$，比模数$n$还要大， 这让SNAPI协议变得实践性较差，公钥加密算法和*大的指数的素数测试*会引入大量运算。
 
 ###### 1.1 Overview of Our Results
 
@@ -78,7 +78,7 @@ EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hel
 - 以PEKEP为基础增加了两个额外的流程，让攻击者可以成功进行`e-residue`攻击的概率下降到ε（$0<ε≤2^{-80}$），ε是Bob选择的
 - 在这种情况下，每个模幂运算的复杂度为$O(log_2ε^{-1})$，大大减小了EKE的幂运算(160bit)，如果引入cache可以降低更多。
 
-`PEKEP`和`CEKEP`只需要预先共享一个口令即可，这是非常实用的。
+`PEKEP`和`CEKEP`只需要预先共享一个口令即可，不需要引入PKI体系，这是非常实用的。
 
 ###### 1.2 相关工作
 
@@ -111,11 +111,16 @@ EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hel
 - 介绍基本的PEKEP
 	- 等式有解和无解意味着什么？
 - PEKEP是如何防御`e-residue attack`的？
-- 
 
 ![image](https://user-images.githubusercontent.com/40269368/148143358-c0e068e9-a51e-4c72-99f2-93637bab3547.png)
 
 ![image-20220105102858112](/Users/mac/Library/Application Support/typora-user-images/image-20220105102858112.png)
 
 ###### 定理1
+
+
+
+先假设已经证明完毕
+
+##### 5 Computationally-Efficient Key Exchange Protocol 提高计算效率
 

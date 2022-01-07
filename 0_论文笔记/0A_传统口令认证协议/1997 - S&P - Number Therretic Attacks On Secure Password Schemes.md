@@ -140,36 +140,74 @@ $(R^e)'^{(p-1)/3} (mod(p)) ≡((R^{k3})^{(p-1)/3})(mod(p))≡R^{k(p-1)}(mod(p))$
 
 **针对DH-EKE的数论攻击**
 
+*有关生成元*
 
+- 模素数$p$一个原根是$Z_p$中的整数$r$，使得$Z_p$中的每个非零元素都是$r$的一个幂次，比如2是模11的原根，而3不是
 
+- 数论中一个重要事实是对于每个素数$p$都存在一个模$p$的原根。假设$p$是一个素数而$r$是一个模$p$的原根，如果整数$a$介于1到$p-1$之间，则存在唯一的指数$e$使$r^e=a$，即有$r^e(mod(p))=a$
 
+- **离散对数问题**：输入是一个素数$p$,一个模$p$的原根$r$和一个正整数$a∈Z_p$，输出以$r$为底$a$模$p$的离散对数，这个问题实际上没有已知多项式算法可以求解
 
+*数论攻击*
 
+querying attacker 伪装成Alice，发送它构造的$g,p$，并用随机$X$替代$P(g^{R_A}(mod(p)))$
 
-### 小标题
+B收到后计算$P(g^{R_B}(mod(p)))$给attacker，这是一个足够随机的；**然而，g,p的选择可能会带来问题**
 
-- 2 EKE
-- 3 RSA Version
-	- 3.3 Subtleties of RSA-EKE
-	- 3.4 Classifications of Attackers 攻击者分类
-	- 3.5 Number Theoretic Attack On RSA-EKE
-	- 3.6 Neutralizing the Attack 中和攻击
-	- 3.7 Facts from Number Theory  数论知识
-- 4 The Diffie Hellman Version
-	- 4.1 Brief Description Hellman Version
-	- 4.2 Description of the Diffie Hellman Encrypted Key Exchange(DH-EKE)
-	- 4.3 Number Theoretic Attack on DH-EKE
-	- 4.4 Attack Avoidance
-	- 4.5 Attack on Half-Encrypted DH-EKE
-		- 4.5.1 Attack with the First Message Unencrypted
-		- 4.5.2 Attack with the Second Message Unencrypted
-- 5 The ElGamal Version
-	- 5.1 Brief Description of the ElGamal Cryptosystem
-	- 5.2 Description of ElGamal-EKE
-	- 5.3 Number Theoretic Attack on the ElGamal EKE
-	- 5.4 Attack on the Half Encrypted ElGamal-EKE
-- 6 Gong-Lomas-Needham-Saltzer Protocols
-	- 6.1 Direct Authentication Protocol (RSA Variant)
-	- 6.2 Secret Public Key Protocol (RSA Variant)
-- 7 Why the Attacks are Possible
-- 8 Conclusion
+在第一条消息中，攻击者发送$g^d,p$，其中，$d$是一个小素数，而且$d|(p-1)$
+
+B会计算$a≡(g^d)^{R_B}(mod(p))$，即$g^{R_Bd}(mod(p))$，显然，$a$是d次剩余，即有$a^{(p-1)/d}≡1(mod(p))$，代入$a$可得$g^{R_Bd((p-1)/d)}(mod(p))$根据费马小定理，值为$1(mod(p))$
+
+攻击者收到$P(g^{R_Bd}(mod(p)))$，通过猜测口令求解，并添加$((p-1)/d)(mod(p))$去计算，如果不为1，则可以排除猜测的口令
+
+根据推论可知，p-1个数字中有 $(p-1)/d$个都可能产生1，也就是每次的会话可能可以减少$1/d$，也可以通过对数级别减少到$1$ ❓
+
+*避免攻击*
+
+如果允许攻击者自行选择$g^d$和$p$，这样的攻击无法避免。但是实际上$g^d$并不是生成元，它却满足$g^{d(p-1)/d}≡1(mod(p))$，所以它不是生成元
+
+本文要求$g$为本原根。测试生成元的方法是使用$p-1$，其中$p-q = kp'$，$p'$是一个大素数
+
+需要检测$p$或$p'$为素数，也需要检测$g$是$p$的生成元
+
+**针对半加密的DH-EKE的攻击**
+
+作者建议DH-EKE两条消息都用口令加密，除非挑战是特殊类型的
+
+*第一条不加密*
+
+> challenge是有类型的，一个bit位，0表示A是发送者，1表示B是发送者
+
+querying attacker可以伪装为A，选择$R_A$并发送$g^{R_A}(mod(p))$给$B$，收到后生成$R_B$，求出$K=g^{R_AR_B}(mod(p))$，给A发送$P(g^{R_B}(mod(p)))$和$K(C_B)$
+
+攻击者可以通过$P'$得到$(g^{R_B})'$，自己有$R^A$，可以生成$K'$，如果在$C_B$中有冗余信息，攻击者就可能猜测口令。
+
+比如实际发送的挑战是$K(C_B,1)$，攻击者将会拒绝所有解析出$C_B,0$的口令，大概有一半可以被晒出，也就是以对数级别下降
+
+*第二条不加密*
+
+即只有第一条消息是加密的，active attacker拦截了会话，伪装成Bob
+
+A 发送$P(g^{R_A}(mod(p)))$，攻击者在第二条消息中返回明文$g^{R_B}(mod(p))$，攻击者自己选择了$R_B$，可以通过猜测$P'$得到$g^{R_A}$，得到$K'$，但攻击者可能不知道在挑战响应信息中是否有多余的信息。
+
+攻击者可以用间接的方式，它无法发送一个合法类型的挑战，因为它不知道$K$，所以它只返回一个随机数$X$，如果A接受了消息，就说明$K(X)=C_B',1$，如果拒绝了则为$C_B',0$。可以通过这样的方式拒绝一般的口令，最后达到只剩一个口令
+
+这样，A可以通过总是回应并且不要挂起会话等避免在验证$K$的过程中泄露有用的信息
+
+下一步A需要发送$K(C_A,C_B)$给攻击者，A应当如何使用$C_B$，应该解密$X$得到$C_B$还是选择一个随机数。
+
+- 如果$K^{-1}(X)$被使用，攻击者可以尝试所有的从猜测$P'$得到的候选$K'$，它们可以找到$K'^{-1}(X)$和$K'^{-1}(C_B)$是否匹配
+- 如果采用随机数，攻击者可以尝试找到$K'^{-1}(X)$和$K'^{-1}(C_B)$是否匹配，如果都不匹配，攻击者就知道A发送了一个假的$C_B$，因为A发送的$X$解析后应该为$(C_B',0)$而不是$(C_B,1)$，这样又可以过滤一些password
+
+以下是一种解决方法，如果A用特别复杂的类型而不是一个比特，比如A用64个0而B用64个1，这样A可以很快拒绝X，因为$K^{-1}(X)$可以产生$(C_B',111...1111)$是几乎不可能的
+
+#### 5 The EkGamal Version
+
+数论攻击和DH-EKE类似
+
+#### 6 Gong-Lomas-Needham-Saltzer Protocols
+
+对于Direct Authentication Protocol和Secret Public Key Protocol进行了分析
+
+#### 7 Why the Attacks are Possible
+

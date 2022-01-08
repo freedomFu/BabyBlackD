@@ -12,9 +12,13 @@
 
 #### 研究背景及意义
 
-当前提出的基于RSA的PAKE协议都不够安全，其中SNAPI虽然安全，但是它需要$e>n$，这让SNAPI实用性变差。作者提出PEKEP，$e$为大素数和小素数都可，可抵抗`e-residue`攻击（针对RSA的离线字典攻击），基于RSA猜想和随机预言模型（ROM）对PEKEP进行了形式化安全分析，且提出了一种计算性能更高的协议。
+当前提出的基于RSA的PAKE协议都不够安全，其中SNAPI虽然安全，但是它需要$e>n$，实用性较差。作者提出PEKEP，$e$为大素数和小素数都可，可抵抗`e-residue`攻击（针对RSA的离线字典攻击），基于RSA猜想和随机预言模型（ROM）对PEKEP进行了形式化安全分析，且提出了一种计算性能更高的协议CEKEP。这两种都无需共享公共参数，只需要提前共享口令即可，在应用上更具有吸引力。
 
-#### 研究内容
+
+
+
+
+
 
 
 
@@ -35,21 +39,6 @@
 #### Introduction
 
 > - The EKE-like protocols do not rely on the existence of a public key infrastructure(PKI). This is desirable in many environments where the deployment of a public key infrastructure is either not possible or would be overly complex.
-
-### 文章脉络
-
-#### 小标题
-
-- 1 Introduction
-	- 1.1 Overview of Our Results
-	- 1.2 Related Work
-- 2 Preliminaries 预备知识
-- 3 Security Model
-- 4 Password Enabled Key Exchange Protocol ✨
-- 5 Computationally-Efficient Key Exchange Protocol✨
-- 6 Formal Security Analysis✨
-- 7 Conclusion
-- A **Proof of Theorem 3**✨
 
 #### 翻译记录
 

@@ -58,7 +58,7 @@ EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hel
 
 - 包含两个实体Alice和Bob，共享一个短口令
 - Alice有一对RSA密钥对，$n,e,d$ 其中$ed≡1(mod φ(n))$
-	- Alice可以选择大或小的素数作为$e$，Bob无需测试A选择e是否与$φ(n)$互素的正确性
+	- Alice可以选择大或小的素数作为$e$，Bob无需测试A选择e是否与$φ(n)$互素的正确性，无需对$e$进行素数测试
 - 从数论角度，PEKEP可以抵抗e次剩余攻击`e-residue attack`
 - 基于RSA假设和ROM对PEKEP做了形式化安全分析
 
@@ -67,18 +67,21 @@ EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hel
 - 以PEKEP为基础增加了两个额外的流程，让攻击者可以成功进行`e-residue`攻击的概率下降到ε（$0<ε≤2^{-80}$），ε是Bob选择的
 - 在这种情况下，每个模幂运算的复杂度为$O(log_2ε^{-1})$，大大减小了EKE的幂运算(160bit)，如果引入cache可以降低更多。
 
-`PEKEP`和`CEKEP`只需要预先共享一个口令即可，不需要引入PKI体系，这是非常实用的。
+`PEKEP`和`CEKEP`只需要预先共享一个口令即可，不需要引入PKI体系也不需要提前共享其他的公共参数，这是非常实用的。
 
 ###### 1.2 相关工作
 
 - BM提出的EKE是第一个PAKE协议，不需要实体知道另一个实体的公钥，EKE之后，许多学者提出了一些改进和扩展。
 	- 在初始版本中，他们提出了EKE与公钥算法的可行版本，RSA、ElGamal和Diffie-Hellman
 	- RSA的问题是B未知A公钥$(n,e)$，无法验证$e$是否与$φ(n)$互素，可能导致`e-residue`攻击。学者针对基于RSA的EKE做了新的研究，OKE、SNAPI等
+		- SNAPI强制让e是一个比n大的素数，可以保证e与$φ(n)$互素
 - 为了避免大的指数$e$，学者提出了使用交互协议，但是交互可能会引入一个大的会话开销
 
 ##### 2 预备知识
 
 ![image](https://user-images.githubusercontent.com/40269368/148057452-cad51ca2-ba88-4621-a2cc-ef4db0c5ab63.png)
+
+最后一条⑦是说的e次剩余的事情
 
 ##### 3 Security Model 安全模型
 
@@ -112,4 +115,14 @@ EKE不依赖于PKI，保证了自己的简单性和便利性，它与`Diffie-Hel
 先假设已经证明完毕
 
 ##### 5 Computationally-Efficient Key Exchange Protocol 提高计算效率
+
+
+
+
+
+##### 附录A 定理3 的证明
+
+作者定义了一系列混合实验，在每个实验中，更改了会话密钥的选取方式
+
+###### 混合实验$P_0$
 

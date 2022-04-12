@@ -3,14 +3,22 @@
 > Authenticated Key Exchange Secure against Dictionary Attacks 抵抗字典攻击的安全AKE协议
 >
 > **BPR ROM模型**
+>
+> **优点：**
+>
+> **缺点：**
+
+遗留的问题：
+
+
 
 ### 翻译记录
 
 #### 摘要
 
-对于基于口令的AKE协议的底层理论处于滞后的阶段，作者提出了一种模型来处理口令猜测、前向安全性、服务器故障和会话密钥丢失的问题。该模型可以用于定义各种目标，以隐式认证的AKE作为基本目标，另外还有实体认证的目标。
+对于基于口令的AKE协议的底层理论处于滞后的阶段，作者提出了一种模型来处理口令猜测、前向安全性、服务器故障和会话密钥丢失的问题。该模型可以用于定义各种目标，以**隐式认证的AKE**作为基本目标，另外还有实体认证的目标。
 
-作者以EKE作为基础来证明安全性：证明了两个flow的协议在理想密码模型下的安全性
+作者以EKE作为基础来证明安全性：证明了two-flow的EKE协议在ideal-cipher model下的安全性
 
 > 隐式认证：指协议的参与者（可能包括服务器）可以确保除了指定实体外，其他任何实体都不能得到会话密钥
 
@@ -24,7 +32,7 @@
 
 有一个敌手$Ã$可以进行离线攻击，枚举在字典D中的口令（字典中大概率包括$pw$）
 
-> 在一个定义为*好*的协议中，作者认为一个攻击者击败协议目标的机会取决于它与协议参与者交互的次数，而不是取决于它离线计算的时间。
+> 在一个定义为*好*的协议中，作者认为一个攻击者击败协议目标的机会取决于它与协议参与者交互的次数，而不是取决于它离线计算的时间。**※**
 
 这个问题首先由EKE协议的提出者提供了解决思路，他们在1992年提出了EKE并给出了不正式的安全分析，引起了研究人员广泛地研究。 因为：**口令猜测攻击时侵入系统常见方式，这个领域可以通过好的密码协议来做**
 
@@ -39,12 +47,13 @@
 		- 让敌手拥有获取协议执行的能力
 		- 提供给敌手破坏能力，引出对于前向安全性的讨论
 - 专注于AKE，它比双向鉴别更基础，从实用角度，它更简单而且flow更少。但是当引入口令猜测安全的时候，方法将会更加复杂。
-- 在本文的方法下，对于字典攻击的抵抗实际上是敌手优势和资源消耗的问题。本文以定理的形式给出，让协议的安全性定义为要执行多少次计算和要做多少次交互。所以看协议是否足够安全来抵抗字典攻击可以看最大的敌手优势是否会随着交互次数和口令空间大小的比值增长而增长
-- 作者证明了EKE2在理想密码模型下是安全的，而且这里需要前向安全性
+- 在本文的方法下，对于字典攻击的抵抗实际上是敌手优势和资源消耗的问题。本文以定理的形式给出，让协议的安全性定义为要执行多少次计算和要做多少次交互
+- **看协议是否足够安全来抵抗字典攻击**可以看最大的敌手优势是否会随着交互次数和口令空间大小的比值增长而增长
+- 作者证明了EKE2在Ideal-Cipher Model下是安全的，此处安全性需要实现前向安全性
 
 ##### 在做的工作
 
-- 客户端持有$pw$服务器持有$f(pw)$，一个单向函数
+- 客户端持有$pw$，服务器持有$f(pw)$，一个单向函数
 - $H(pw)$是一个随机预言，算术是基于群来做的
 
 #### 2 模型
@@ -182,27 +191,27 @@ $h$是从$Ω$空间选择 ，即$PW$会基于一个理想的哈希函数来做�
 ### 小标题
 
 - 1 Introduction
-	- The Problem
-	- Contributions
-	- Related Work
-	- Ongoing Work
+    - The Problem
+    - Contributions
+    - Related Work
+    - Ongoing Work
 - 2 Model
-	- Protocol Participants
-	- Long-Lived Keys
-	- Executing the Protocol
-	- Standard Model
+    - Protocol Participants
+    - Long-Lived Keys
+    - Executing the Protocol
+    - Standard Model
 - 3 Definitions
-	- Partnering Using SIDs
-	- Two Flavors of Freshness
-	- Explanation
-	- AKE Security (With and Without Forward Secrecy)
-	- Authentication
-	- Measuring Adversarial Resources
-	- Diffie-Hellman Assumption
+    - Partnering Using SIDs
+    - Two Flavors of Freshness
+    - Explanation
+    - AKE Security (With and Without Forward Secrecy)
+    - Authentication
+    - Measuring Adversarial Resources
+    - Diffie-Hellman Assumption
 - 4 Secure AKE: Protocol EKE2
-	- Description of EKE2
-	- Security Theorem
+    - Description of EKE2
+    - Security Theorem
 - 5 Adding Authentication
-	- The Transformations
-	- Properties
-	- Simplifications
+    - The Transformations
+    - Properties
+    - Simplifications

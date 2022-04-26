@@ -47,7 +47,7 @@ $(∀w,x,y,z)---S(R(P(w),P(x)),Q(y,z))=S(R(P(y),P(z)),Q(w,x))$
 
 ### Secure Remote Password 
 
-![image](https://user-images.githubusercontent.com/40269368/158005913-f432312a-99d6-4392-ac91-3e30d683d390.png)
+![image](https://user-images.githubusercontent.com/40269368/158005913-f432312a-99d6-4392-ac91-3e30d683d390.png)++
 
 ---
 
